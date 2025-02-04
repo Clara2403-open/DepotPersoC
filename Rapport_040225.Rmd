@@ -1,0 +1,144 @@
+---
+title: "Rapport OPEN"
+author: "COUSTON Clara"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+  html_document:
+    code_folding: hide
+    fig_caption: true
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+bibliography: Biblio/Biblio.bib
+csl: "biblio/isara-iso-690.csl"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+library(knitr)
+library(ade4)
+library(FactoMineR)
+```
+
+# Introduction
+
+Ce rapport s'inscrit dans le test et l'utilisation de RMarkdown. Celui-ci sera déposé dans un git afin d'être disponible pour les utilisateurs.
+Ce rapport contient : 
+-   Du texte
+-   Un graphique
+-   Une photo
+-   Une source bibliographique
+
+Le but est de créer un graphique ostentatoire avec l'utilisation de plusieurs fonctions de la suite ggplot2. 
+
+# Les données
+
+Les données proviennent de RStudio directement.
+
+## Imports
+
+```{r imports, echo=TRUE, eval=TRUE}
+library(ggplot2)
+data("diamonds")
+```
+
+## Présentation
+
+Nous disposons de données sur diamonds :
+
+```{r sites, echo=TRUE, eval=TRUE}
+head(diamonds)
+```
+
+Vous pouvez aussi intégrer du R dans le texte comme dans la phrase suivante. Nous disposons de `r ncol(diamonds)` colonnes et `r nrow(diamonds)` lignes.
+
+# Analyses
+
+## Réalisation du graphique
+
+Voici la figure réalisée suite à la consigne demandée :
+
+```{r graph1, echo=FALSE, eval=TRUE, fig.height = 10, fig.width = 6, fig.align = "center"}
+
+# Création d'un graphique avancé avec plusieurs dimensions
+plot <- ggplot(diamonds, aes(x = carat, y = price, color = cut, size = depth, shape = clarity)) +
+  geom_point(alpha = 0.6) +  # Ajout de points avec une transparence de 60%
+  labs(
+    title = "Analyse avancée des diamants",
+    subtitle = "Relation entre le carat, le prix, la coupe, la profondeur et la clarté",
+    x = "Carat",
+    y = "Prix (USD)",
+    color = "Qualité de la coupe",
+    size = "Profondeur",
+    shape = "Clarté"
+  ) +
+  theme_minimal() +  # Application d'un thème épuré
+  scale_color_manual(values = c("Fair" = "red", "Good" = "blue", "Very Good" = "green", "Premium" = "purple", "Ideal" = "orange")) +
+  scale_size_continuous(range = c(1, 5)) +  # Ajustement de la taille des points
+  facet_wrap(~ cut) +  # Séparation en sous-graphiques par qualité de coupe
+  theme(legend.position = "bottom", panel.grid.major = element_line(color = "grey90"))
+
+# Affichage du graphique
+print(plot)
+
+```
+
+## Analyse du graphique
+
+### Relation entre le carat et le prix
+
+On observe une tendance générale où le prix augmente avec le nombre de carats. Cependant, cette relation n'est pas strictement linéaire, car d'autres facteurs influencent également le prix.
+
+### Impact de la qualité de coupe
+
+La couleur des points représente la qualité de coupe du diamant, avec une différenciation claire grâce à une palette de couleurs distinctes.
+Les diamants de coupe "Ideal" et "Premium" (en orange et violet) semblent généralement plus chers pour un même nombre de carats, ce qui confirme l'importance de la qualité de la coupe sur la valeur.
+
+### Le profondeur du diamand
+
+La taille des points reflète la profondeur du diamant. On remarque que la profondeur varie mais ne semble pas avoir un impact immédiat sur le prix.
+
+### Facettage des données
+
+Le graphique est divisé en plusieurs sous-graphiques selon la qualité de coupe. Cela permet d’analyser comment la relation entre carat et prix varie selon chaque catégorie de coupe.
+
+# Conclusion
+
+Ce graphique met en évidence l’influence de plusieurs facteurs sur le prix des diamants. Si le carat est un élément déterminant, la qualité de coupe et potentiellement d'autres critères (comme la clarté et la couleur) influencent également fortement la valeur du diamant [@watson_secrets_2025].
+
+## Autre graphique réalisé
+
+```{r graph2, echo=FALSE, eval=TRUE, fig.height = 10, fig.width = 6, fig.align = "center"}
+
+library(ggplot2)
+
+# Création du graphique
+f <- ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_hex(aes(fill = after_stat(count)), color = "black") +  # Ajout de contours noirs aux hexagones
+  scale_fill_viridis_c(option = "C") +  # Palette de couleurs améliorée
+  labs(
+    title = "Densité des diamants selon le carat et le prix",
+    subtitle = "Visualisation en hexagones",
+    x = "Carat",
+    y = "Prix (USD)",
+    fill = "Nombre d'observations"
+  ) +
+  theme_minimal() +  # Appliquer un thème propre
+  theme(legend.position = "right")  # Déplacer la légende sur le côté droit
+
+# Affichage du graphique
+print(f)
+
+```
+
+
+
+
+
+## Bibliographie
