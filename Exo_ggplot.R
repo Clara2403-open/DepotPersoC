@@ -33,5 +33,8 @@ geom_hex(mapping = aes(x=diamonds$color, y=diamonds$depth),data = diamonds,stat 
 geom_bar(mapping = aes(x = diamonds$carat,y=diamonds$price), data = diamonds, just = 0.5,width = NULL)
 
 f <- ggplot(mpg, aes(diamonds$carat, diamonds$price))
-f + geom_hex(mapping = aes(x=diamonds$color, y=diamonds$depth),data = diamonds,stat = "binhex",position = "identity",show.legend = TRUE,inherit.aes = TRUE)
+f + geom_hex(mapping = aes(x=color, y=depth),data = diamonds,stat = "binhex",position = "identity",show.legend = TRUE,inherit.aes = TRUE)
 
+f + geom_area(mapping = aes(x=carat, y=price),data=diamonds, stat = "align", position = "stack",outline.type = "upper", show.legend = TRUE, rainbow(n,s=1,v=1)
+
+              
