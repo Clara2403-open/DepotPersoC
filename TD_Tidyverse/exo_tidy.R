@@ -13,6 +13,7 @@
 
 
 library(tidyverse)
+library("readxl")
 
 #%>% 
 #|> 
@@ -33,7 +34,7 @@ library(tidyverse)
 ##########################################################################
 
 Sites <- read_excel("data/Sites.xlsx")
-Microorga <- read_excel("data/Microorganismes.xlsx")
+iMicroorga <- read_excel("data/Microorganismes.xlsx")
 Nematodes <- read_excel("data/Nematodes.xlsx")
 Vers <- read_excel("data/Lombrics.xlsx")
 
@@ -43,7 +44,12 @@ Vers <- read_excel("data/Lombrics.xlsx")
 ########### CONSIGNE : Choisir deux communauté biologique ###########
 # Associer sites et deux communautés
 
+#left_join() right_join() inner_join() full_join()
 
+inner_join(Sites,iMicroorga,join_by(ID))
+Sites %>%
+  inner_join(.,iMicroorga,join_by(ID)) %>%
+  inner_join(.,Nematodes,join_by(ID)) -> SiteMN
 
 
 ##########################################################################
@@ -51,19 +57,29 @@ Vers <- read_excel("data/Lombrics.xlsx")
 ##########################################################################
 ########### CONSIGNE : Choisir un site ###########
 
+SiteMN %>%
+  filter (SITE == "Feucherolles") %>%
+  select(SITE:REPET_BLOC,ARGILE,contains("SABLE"),
+         ends_with("MIN")) -> feMN
 
 ##########################################################################
 ####################### Créer des variables ##################
 ##########################################################################
 
+feMN %>%
+  mutate(feMN, SABLES = SABLE_F+SABLE_G) -> feMN1
 
 ##########################################################################
 ############################## Calculs par groupe ########################
 ##########################################################################
 ########### CONSIGNE : calculs sur plusieurs variables en même temps######
 
-
-##########################################################################
+feMN1 %>%
+  group_by(MODALITE_DESCR) %>%
+  summarise(mean.Pp=mean(Pphyto), sd_Pp=sd_phyto)
+  
+  
+################################################feMN##########################################################################
 ####################### Graphique ########################
 ##########################################################################
 ########### CONSIGNE : un graphique en modifiant l'ordre et en recodant des modalités
